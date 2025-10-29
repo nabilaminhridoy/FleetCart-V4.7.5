@@ -137,6 +137,17 @@ return [
     'nagad_public_key' => 'Public Key',
     'nagad_private_key' => 'Private Key',
 
+    'uddoktapay_enabled' => 'Status',
+    'translatable.uddoktapay_label' => 'Label',
+    'translatable.uddoktapay_description' => 'Description',
+    'uddoktapay_test_mode' => 'Sandbox',
+    'uddoktapay_sandbox_api_url' => 'Sandbox API URL',
+    'uddoktapay_sandbox_api_key' => 'Sandbox API Key',
+    'uddoktapay_live_api_url' => 'Live API URL',
+    'uddoktapay_live_api_key' => 'Live API Key',
+    'uddoktapay_live_verify_url' => 'Live Verify URL',
+    'uddoktapay_live_refund_url' => 'Live Refund URL',
+
     'sslcommerz_enabled' => 'Status',
     'translatable.sslcommerz_label' => 'Label',
     'translatable.sslcommerz_description' => 'Description',
