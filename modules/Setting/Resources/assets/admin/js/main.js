@@ -92,6 +92,10 @@ $("#sslcommerz_enabled").on("change", () => {
     $("#sslcommerz-fields").toggleClass("hide");
 });
 
+$("#uddoktapay_enabled").on("change", () => {
+    $("#uddoktapay-fields").toggleClass("hide");
+});
+
 $("#payfast_enabled").on("change", () => {
     $("#payfast-fields").toggleClass("hide");
 });
