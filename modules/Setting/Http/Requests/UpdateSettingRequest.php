@@ -194,6 +194,16 @@ class UpdateSettingRequest extends Request
             'nagad_merchant_number' => 'required_if:nagad_enabled,1',
             'nagad_public_key' => 'required_if:nagad_enabled,1',
             'nagad_private_key' => 'required_if:nagad_enabled,1',
+            
+            'uddoktapay_enabled' => 'required|boolean',
+            'translatable.uddoktapay_label' => 'required_if:uddoktapay_enabled,1',
+            'translatable.uddoktapay_description' => 'required_if:uddoktapay_enabled,1',
+            'uddoktapay_test_mode' => 'required|boolean',
+            'uddoktapay_sandbox_api_url' => 'required_if:uddoktapay_test_mode,1',
+            'uddoktapay_sandbox_api_key' => 'required_if:uddoktapay_test_mode,1',
+            'uddoktapay_live_api_url' => 'required_if:uddoktapay_test_mode,0',
+            'uddoktapay_live_api_key' => 'required_if:uddoktapay_test_mode,0',
+            'uddoktapay_live_verify_url' => 'required_if:uddoktapay_test_mode,0',
 
             'sslcommerz_enabled' => 'required|boolean',
             'translatable.sslcommerz_label' => 'required_if:sslcommerz_enabled,1',
