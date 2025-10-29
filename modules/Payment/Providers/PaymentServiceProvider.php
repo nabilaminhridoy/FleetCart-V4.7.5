@@ -22,6 +22,7 @@ use Modules\Payment\Gateways\MercadoPago;
 use Modules\Payment\Gateways\AuthorizeNet;
 use Modules\Payment\Gateways\BankTransfer;
 use Modules\Payment\Gateways\CheckPayment;
+use Modules\Payment\Gateways\UddoktaPay;
 
 class PaymentServiceProvider extends ServiceProvider
 {
@@ -53,6 +54,7 @@ class PaymentServiceProvider extends ServiceProvider
         $this->registerCashOnDelivery();
         $this->registerBankTransfer();
         $this->registerCheckPayment();
+        $this->registerUddoktaPay();
 
     }
 
@@ -206,6 +208,13 @@ class PaymentServiceProvider extends ServiceProvider
     {
         if ($this->enabled('sslcommerz')) {
             Gateway::register('sslcommerz', new SslCommerz());
+        }
+    }
+
+    private function registerUddoktaPay()
+    {
+        if ($this->enabled('uddoktapay')) {
+            Gateway::register('uddoktapay', new UddoktaPay());
         }
     }
 }
