@@ -14,6 +14,7 @@ use Modules\Checkout\Events\OrderPlaced;
 use Modules\Checkout\Services\OrderService;
 use Modules\Payment\Libraries\Bkash\BkashService;
 use Modules\Payment\Libraries\Nagad\NagadPayment;
+use Modules\Payment\Libraries\UddoktaPay\UddoktaPayPayment;
 
 class CheckoutCompleteController
 {
@@ -130,6 +131,46 @@ class CheckoutCompleteController
             }
         }
 
+        if (request()->query('paymentMethod') === 'uddoktapay') {
+            try {
+                $invoiceId = request()->query('invoice_id');
+                
+                if (!$invoiceId) {
+                    return redirect()->route('checkout.payment_canceled.store', ['orderId' => $orderId, 'paymentMethod' => 'uddoktapay']);
+                }
+
+                // Determine if we're in sandbox mode
+                $isSandbox = (bool)setting('uddoktapay_test_mode');
+                
+                $config = [
+                    'sandbox' => $isSandbox,
+                    'api_key' => $isSandbox 
+                        ? setting('uddoktapay_sandbox_api_key') 
+                        : setting('uddoktapay_live_api_key'),
+                    'verify_url' => $isSandbox 
+                        ? 'https://sandbox.uddoktapay.com/api/verify-payment' 
+                        : (setting('uddoktapay_live_verify_url') ?? 'https://pay.uddoktapay.com/api/verify-payment'),
+                ];
+
+                $uddoktaPay = new UddoktaPayPayment($config);
+                $verificationData = $uddoktaPay->verify($invoiceId);
+
+                if ($verificationData['status'] !== 'COMPLETED') {
+                    return redirect()->route('checkout.payment_canceled.store', ['orderId' => $orderId, 'paymentMethod' => 'uddoktapay']);
+                }
+
+                $order = Order::findOrFail($orderId);
+                $order->storeTransaction($verificationData);
+
+                event(new OrderPlaced($order));
+
+                return redirect()->route('checkout.complete.show');
+            } catch (Exception $e) {
+                Log::error('UddoktaPay callback error: ' . $e->getMessage());
+                return redirect()->route('checkout.payment_canceled.store', ['orderId' => $orderId, 'paymentMethod' => 'uddoktapay']);
+            }
+        }
+
         $order = Order::findOrFail($orderId);
 
         $gateway = Gateway::get(request('paymentMethod'));
@@ -152,7 +193,6 @@ class CheckoutCompleteController
             return redirect()->route('checkout.complete.show');
         }
     }
-
 
     /**
      * Display the specified resource.
