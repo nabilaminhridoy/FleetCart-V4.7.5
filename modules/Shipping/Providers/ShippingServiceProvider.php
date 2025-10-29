@@ -51,12 +51,30 @@ class ShippingServiceProvider extends ServiceProvider
 
     private function registerFlatRate()
     {
-        if (!setting('flat_rate_enabled')) {
-            return;
-        }
+        $flatRates = [
+            'flat_rate_inside_dhaka_regular' => [
+                'enabled' => true,
+                'label'   => 'Inside Dhaka City',
+                'cost'    => 60,
+            ],
+            'flat_rate_sub_urban' => [
+                'enabled' => true,
+                'label'   => 'Inside Dhaka Sub-Urban (Keraniganj, Nawabganj, Dohar, Savar, Dhamrai)',
+                'cost'    => 80,
+            ],
+            'flat_rate_outside_dhaka' => [
+                'enabled' => true,
+                'label'   => 'Outside Dhaka',
+                'cost'    => 120,
+            ],
+        ];
 
-        ShippingMethod::register('flat_rate', function () {
-            return new Method('flat_rate', setting('flat_rate_label'), setting('flat_rate_cost') ?? 0);
-        });
+        foreach ($flatRates as $key => $rate) {
+            if ($rate['enabled']) {
+                ShippingMethod::register($key, function () use ($key, $rate) {
+                    return new Method($key, $rate['label'], $rate['cost']);
+                });
+            }
+        }
     }
 }
