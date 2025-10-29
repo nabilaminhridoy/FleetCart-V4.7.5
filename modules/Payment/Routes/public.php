@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Payment\Http\Controllers\BkashPaymentController;
 use Modules\Payment\Http\Controllers\UddoktaPayController;
 
+// bKash Routes
 Route::post('/bkash/get-token', [BkashPaymentController::class, 'getToken'])
     ->name('bkash.get_token');
 
